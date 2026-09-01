@@ -1,0 +1,32 @@
+{
+  "name": "@stellar-x402/client",
+  "version": "0.1.0",
+  "description": "Autonomous AI Agent client for automatically settling x402 payments on Stellar",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stellar-x402/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@stellar/stellar-sdk": ">=16.2.0 <17.0.0"
+  },
+  "devDependencies": {
+    "@stellar/stellar-sdk": "16.2.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.4"
+  }
+}
