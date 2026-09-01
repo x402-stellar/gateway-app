@@ -1,18 +1,18 @@
-# x402-gateway-app
+# gateway-app
 
 [![CI](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml/badge.svg)](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-`x402-gateway-app` is a modular TypeScript and Go monorepo providing developer tooling, API middleware, and an edge-compatible reverse proxy for monetizing Web2 and Web3 APIs using the x402 payment protocol on the Stellar network. It packages `@stellar-x402/core` (XDR challenge encoding and payment signature verification), one-line middlewares for Express and Fastify, an automated AI agent payment client, a high-throughput standalone Go reverse proxy (`proxy/`), and a Next.js 15 merchant portal for real-time settlement telemetry. It allows any service provider to accept Stellar-anchored stablecoin micropayments without altering upstream business logic.
+x402-gateway-app lets API developers put HTTP 402 paywalls in front of their endpoints on Stellar. It includes an Express middleware, a Fastify plugin, a client library for automated AI agent payments, and a standalone Go reverse proxy that runs in front of non-Node backends. APIs can charge per request in USDC or XLM without changing their core business logic or building custom billing infrastructure.
 
 ## Monorepo Layout
 
 ```
 packages/
-  core/         # @stellar-x402/core - Challenge construction & signature parsing
-  express/      # @stellar-x402/express - One-line Express middleware
-  fastify/      # @stellar-x402/fastify - One-line Fastify plugin
-  client/       # @stellar-x402/client - AI Agent Auto-Payer SDK
+  core/         # @stellar-x402/core - Challenge generation and signature parsing
+  express/      # @stellar-x402/express - Express middleware
+  fastify/      # @stellar-x402/fastify - Fastify plugin
+  client/       # @stellar-x402/client - AI Agent payment client
 proxy/          # Standalone Go reverse proxy (zero-dependency static binary)
 apps/
   web/          # Next.js 15 merchant dashboard
