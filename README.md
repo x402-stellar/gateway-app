@@ -1,26 +1,67 @@
 # gateway-app
 
-[![CI](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml/badge.svg)](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml)
+[![CI TypeScript](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml/badge.svg)](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml)
+[![CI Go Proxy](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-go.yml/badge.svg)](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-go.yml)
 [![Docs](https://img.shields.io/badge/docs-x402--stellar.mintlify.app-blue.svg)](https://x402-stellar.mintlify.app)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-x402-gateway-app lets API developers put HTTP 402 paywalls in front of their endpoints on Stellar. It includes an Express middleware, a Fastify plugin, a client library for automated AI agent payments, and a standalone Go reverse proxy that runs in front of non-Node backends. APIs can charge per request in USDC or XLM without changing their core business logic or building custom billing infrastructure.
+x402-gateway-app lets API developers put HTTP 402 paywalls in front of their endpoints on Stellar. It includes an Express middleware, a Fastify plugin, a gasless settlement relayer, an AI agent payment client, and a standalone Go reverse proxy that runs in front of non-Node backends. APIs can charge per request in USDC or XLM without changing their core business logic or building custom billing infrastructure.
 
 Documentation and integration guides: [https://x402-stellar.mintlify.app](https://x402-stellar.mintlify.app)
+
+---
 
 ## Monorepo Layout
 
 ```
 packages/
-  core/         # @stellar-x402/core - Challenge generation and signature parsing
+  core/         # @stellar-x402/core - Challenge generation, multi-primitive signatures, schemas
   express/      # @stellar-x402/express - Express middleware
   fastify/      # @stellar-x402/fastify - Fastify plugin
+  facilitator/  # @stellar-x402/facilitator - Gasless relayer service and nonce sequencer
   client/       # @stellar-x402/client - AI Agent payment client
 proxy/          # Standalone Go reverse proxy (zero-dependency static binary)
 apps/
-  web/          # Next.js 15 merchant dashboard
+  web/          # Next.js 15 merchant portal
   demo-api/     # Reference API fixture
 ```
+
+---
+
+## Supported Payment Primitives
+
+The gateway suite supports three distinct Stellar payment mechanisms:
+
+1. **`soroban_sac`**: Smart contract token invocations using signed `authEntryXdr` and monotonic replay nonces.
+2. **`stellar_classic`**: Horizon-compatible transaction envelopes (`transactionEnvelopeXdr`) with optional memo identifiers, ideal for native XLM and trustline credit assets.
+3. **`channel_voucher`**: Pre-authorized micropayment channel vouchers (`channelId`, `voucherIndex`, `voucherSignature`) for high-frequency or streaming API calls without per-call on-chain transactions.
+
+---
+
+## Facilitator & Gasless Relaying
+
+The `@stellar-x402/facilitator` package enables gasless transactions where the merchant or gateway sponsors Soroban transaction fees:
+
+* **Concurrency Sequencer**: `NonceSequencer` FIFO task queue eliminates `tx_bad_seq` sequence number collisions under concurrent load.
+* **Optimistic Acceptance**: Sub-15ms approvals with asynchronous on-chain batch submission.
+* **Receipt Cache**: In-memory and pluggable receipt verification store.
+
+```ts
+import { FacilitatorService } from '@stellar-x402/facilitator';
+
+const facilitator = new FacilitatorService({
+  network: 'stellar:testnet',
+  sorobanRpcUrl: 'https://soroban-testnet.stellar.org',
+  horizonUrl: 'https://horizon-testnet.stellar.org',
+  sponsorSecretKey: process.env.SPONSOR_SECRET_KEY!,
+  settlementContractId: 'CATZACNU6KVGZXYF7J4O4NLINRKL5FWC2YAQPHTIQMSQPDAJSSOMRUNL',
+  optimisticAcceptance: true,
+});
+
+const receipt = await facilitator.processSettlement({ signature, challenge });
+```
+
+---
 
 ## Quickstart
 
@@ -32,17 +73,18 @@ import { stellarX402Middleware } from '@stellar-x402/express';
 const app = express();
 
 app.use(
-  '/api/v1/weather',
+  '/api/v1/data',
   stellarX402Middleware({
-    price: '0.01', // 0.01 USDC
+    price: '0.01',
     asset: 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC',
     recipient: 'GD...',
     network: 'stellar:testnet',
+    acceptedPaymentTypes: ['soroban_sac', 'stellar_classic'],
   })
 );
 
-app.get('/api/v1/weather', (req, res) => {
-  res.json({ temp: 72, condition: 'Sunny' });
+app.get('/api/v1/data', (req, res) => {
+  res.json({ status: 'ok', data: 'Protected content delivered' });
 });
 
 app.listen(3000);
@@ -53,6 +95,25 @@ app.listen(3000);
 cd proxy
 go run cmd/gateway/main.go --config config.yaml
 ```
+
+---
+
+## Structured Error Taxonomy
+
+Every error emitted by the gateway uses typed `X402ErrorCode` identifiers:
+
+| Error Code | Description |
+|---|---|
+| `X402_AUTH_MISSING` | Request omitted payment signature header |
+| `X402_AUTH_INVALID_FORMAT` | Malformed base64 or schema validation failure |
+| `X402_AUTH_EXPIRED` | Payment challenge timestamp has lapsed |
+| `X402_NONCE_STALE` | Nonce already settled or out of monotonic sequence |
+| `X402_NETWORK_MISMATCH` | Signature target network differs from gateway configuration |
+| `X402_ASSET_UNSUPPORTED` | Asset address or asset code not in route whitelist |
+| `X402_RPC_SIMULATION_FAILED` | Transaction simulation rejected by Soroban host |
+| `X402_SUBMISSION_REVERTED` | On-chain transaction execution reverted |
+
+---
 
 ## License
 Apache-2.0
