@@ -115,5 +115,25 @@ Every error emitted by the gateway uses typed `X402ErrorCode` identifiers:
 
 ---
 
+## Merchant Portal & Vercel Deployment
+
+The merchant analytics dashboard (`apps/web`) is a Next.js 15 application displaying real-time 24-hour volume, active paid routes, and settlement fee metrics.
+
+### Local Development
+```bash
+cd apps/web
+pnpm dev
+```
+
+### Vercel Production Deployment
+The application includes a preconfigured `apps/web/vercel.json` and a GitHub Actions continuous deployment pipeline (`.github/workflows/deploy-vercel.yml`).
+
+To automate production deployments on push to `main`, set the following repository secrets:
+* `VERCEL_TOKEN`: Vercel Personal Access Token
+* `VERCEL_ORG_ID`: Vercel Team / Account Identifier
+* `VERCEL_PROJECT_ID`: Vercel Project Identifier
+
+---
+
 ## License
 Apache-2.0
