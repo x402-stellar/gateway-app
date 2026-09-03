@@ -1,0 +1,33 @@
+{
+  "name": "@stellar-x402/fastify",
+  "version": "0.1.0",
+  "description": "Fastify plugin for x402 payments on Stellar",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stellar-x402/core": "workspace:*",
+    "fastify-plugin": "^5.0.1"
+  },
+  "peerDependencies": {
+    "fastify": ">=4.0.0 <6.0.0"
+  },
+  "devDependencies": {
+    "fastify": "^5.0.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.4"
+  }
+}
