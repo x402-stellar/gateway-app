@@ -45,12 +45,13 @@ export interface SettlementReceipt {
   recipient: string;
   asset: string;
   amount: string;
-  nonce: number;
-  transactionHash?: string;
-  ledgerSequence?: number;
+  paymentType?: 'soroban_sac' | 'stellar_classic' | 'channel_voucher' | undefined;
+  nonce?: number | undefined;
+  transactionHash?: string | undefined;
+  ledgerSequence?: number | undefined;
   timestamp: number;
-  errorCode?: X402ErrorCode;
-  errorMessage?: string;
+  errorCode?: X402ErrorCode | undefined;
+  errorMessage?: string | undefined;
 }
 
 export class FacilitatorError extends Error {

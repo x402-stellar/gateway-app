@@ -73,6 +73,7 @@ export class FacilitatorService {
         recipient: challenge.recipient,
         asset: challenge.asset,
         amount: challenge.price,
+        paymentType: signature.paymentType,
         nonce: signature.nonce,
         timestamp: now,
       };
@@ -101,9 +102,9 @@ export class FacilitatorService {
     const now = Math.floor(Date.now() / 1000);
 
     try {
-      // In production, the facilitator wraps signature.authEntryXdr into a transaction,
-      // signs fee sponsor envelope using this.config.sponsorSecretKey, and posts to RPC.
-      const simulatedHash = `tx_${Buffer.from(signature.payer + signature.nonce + now).toString('hex').slice(0, 32)}`;
+      // In production, the facilitator wraps signature.authEntryXdr or classic envelope into a transaction,
+      // signs fee sponsor envelope using this.config.sponsorSecretKey, and posts to RPC/Horizon.
+      const simulatedHash = `tx_${Buffer.from(signature.payer + (signature.nonce ?? 0) + now).toString('hex').slice(0, 32)}`;
 
       const receipt: SettlementReceipt = {
         receiptId,
@@ -112,6 +113,7 @@ export class FacilitatorService {
         recipient: challenge.recipient,
         asset: challenge.asset,
         amount: challenge.price,
+        paymentType: signature.paymentType,
         nonce: signature.nonce,
         transactionHash: simulatedHash,
         ledgerSequence: 105820,
@@ -128,6 +130,7 @@ export class FacilitatorService {
         recipient: challenge.recipient,
         asset: challenge.asset,
         amount: challenge.price,
+        paymentType: signature.paymentType,
         nonce: signature.nonce,
         timestamp: now,
         errorCode: X402ErrorCode.SUBMISSION_REVERTED,

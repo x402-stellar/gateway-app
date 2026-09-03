@@ -53,6 +53,7 @@ export class StellarX402Client {
 
     const paymentSig: PaymentSignature = {
       network: challenge.network,
+      paymentType: 'soroban_sac',
       authEntryXdr,
       payer: this.config.payerAddress,
       nonce,
