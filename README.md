@@ -19,6 +19,7 @@ packages/
   express/      # @stellar-x402/express - Express middleware
   fastify/      # @stellar-x402/fastify - Fastify plugin
   facilitator/  # @stellar-x402/facilitator - Gasless relayer service and nonce sequencer
+  streaming/    # @stellar-x402/streaming - Server-Sent Events (SSE) paywall and token meter
   client/       # @stellar-x402/client - AI Agent payment client
 proxy/          # Standalone Go reverse proxy (zero-dependency static binary)
 apps/
@@ -59,6 +60,29 @@ const facilitator = new FacilitatorService({
 });
 
 const receipt = await facilitator.processSettlement({ signature, challenge });
+```
+
+---
+
+## Streaming AI Paywall (@stellar-x402/streaming)
+
+The `@stellar-x402/streaming` package meters Server-Sent Events (SSE) and token streams for AI inference APIs (OpenAI, Anthropic, or custom LLM endpoints):
+
+* **Token & Chunk Metering**: Inspects streaming chunk deltas and calculates exact token counts.
+* **Deterministic Settlement**: Computes settled amounts and emits cryptographic stream receipt headers (`strm_rcpt_<payer>_<streamId>_<timestamp>`).
+
+```ts
+import { StreamTokenMeter, StreamSettler } from '@stellar-x402/streaming';
+
+const meter = new StreamTokenMeter({
+  pricePerUnit: '0.0001', // 0.0001 USDC per token
+  asset: 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC',
+  recipient: 'GCAL...',
+  pricingModel: 'per_token',
+});
+
+meter.recordChunk('data: {"choices":[{"delta":{"content":"Hello world!"}}]}\n\n');
+const result = meter.getResult();
 ```
 
 ---
