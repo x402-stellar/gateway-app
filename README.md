@@ -22,6 +22,7 @@ packages/
   streaming/    # @stellar-x402/streaming - Server-Sent Events (SSE) paywall and token meter
   client/       # @stellar-x402/client - AI Agent payment client
   python/       # stellar-x402 - Python ASGI & FastAPI paywall middleware
+  cli/          # @stellar-x402/cli - Developer setup and challenge inspection CLI
 proxy/          # Standalone Go reverse proxy (zero-dependency static binary)
 apps/
   web/          # Next.js 15 merchant portal
@@ -142,6 +143,18 @@ app.add_middleware(
 @app.get("/api/v1/forecast")
 async def get_forecast(request: Request):
     return {"city": "New York", "temperature": 68}
+```
+
+### 4. Developer CLI (@stellar-x402/cli)
+```bash
+# Generate middleware boilerplate interactively
+npx @stellar-x402/cli init --framework express --path /api/v1/data --price 0.01
+
+# Inspect gas and resource benchmarks
+npx @stellar-x402/cli quote --op settle_payment
+
+# Generate and verify base64 challenges
+npx @stellar-x402/cli challenge --price 0.01 --recipient GCAL... --asset CDLZ...
 ```
 
 ---

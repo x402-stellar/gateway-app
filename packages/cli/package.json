@@ -1,0 +1,25 @@
+{
+  "name": "@stellar-x402/cli",
+  "version": "0.1.0",
+  "description": "Developer CLI for configuring and testing Stellar x402 paywalls",
+  "bin": {
+    "x402": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stellar-x402/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.4"
+  }
+}
