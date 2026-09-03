@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NETWORK=stellar:testnet
+      - UPSTREAM_URL=http://mock-api:3000
+    depends_on:
+      - mock-api
+
+  mock-api:
+    image: node:22-alpine
+    command: node -e 'require("http").createServer((req, res) => { res.writeHead(200, {"Content-Type": "application/json"}); res.end(JSON.stringify({ status: "ok", data: "protected content" })); }).listen(3000);'
+    ports:
+      - "3000:3000"
