@@ -1,0 +1,43 @@
+name: CD Vercel Deployment
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-vercel.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Merchant Portal to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+      - name: Build monorepo packages
+        run: pnpm build
+      - name: Deploy to Vercel
+        if: env.VERCEL_TOKEN != ''
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: apps/web
+          vercel-args: '--prod'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      - name: Skip notice if Vercel secrets not configured
+        if: env.VERCEL_TOKEN == ''
+        run: echo "VERCEL_TOKEN secret is not set in repository settings. Set VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID to enable automated production deployments."
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
