@@ -1,6 +1,7 @@
 # gateway-app
 
 [![CI](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml/badge.svg)](https://github.com/x402-stellar/gateway-app/actions/workflows/ci-ts.yml)
+[![Docs](https://img.shields.io/badge/docs-mintlify-blue.svg)](https://github.com/x402-stellar/docs)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 x402-gateway-app lets API developers put HTTP 402 paywalls in front of their endpoints on Stellar. It includes an Express middleware, a Fastify plugin, a client library for automated AI agent payments, and a standalone Go reverse proxy that runs in front of non-Node backends. APIs can charge per request in USDC or XLM without changing their core business logic or building custom billing infrastructure.
