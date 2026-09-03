@@ -157,6 +157,25 @@ To automate production deployments on push to `main`, set the following reposito
 * `VERCEL_ORG_ID`: Vercel Team / Account Identifier
 * `VERCEL_PROJECT_ID`: Vercel Project Identifier
 
+## Reference API & End-to-End Testing (apps/demo-api)
+
+The repository includes a reference Express API implementation demonstrating complete end-to-end integration with the Stellar Testnet verifier contract:
+
+* **`/health`**: Open endpoint reporting network and contract ID status.
+* **`/api/v1/weather`**: Protected by `stellarX402Middleware` at 0.01 USDC per request.
+* **`/api/v1/stream`**: Protected by `@stellar-x402/streaming` with per-token billing over Server-Sent Events (SSE).
+
+### Running the Reference Server
+```bash
+cd apps/demo-api
+pnpm start
+```
+
+### Running the End-to-End Integration Tests
+```bash
+pnpm -C apps/demo-api test
+```
+
 ---
 
 ## License
