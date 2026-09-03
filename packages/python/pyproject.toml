@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stellar-x402"
+version = "0.1.0"
+description = "ASGI and FastAPI HTTP 402 paywall middleware for Stellar"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "x402-stellar Team" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Middleware",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://x402-stellar.mintlify.app"
+Repository = "https://github.com/x402-stellar/gateway-app"

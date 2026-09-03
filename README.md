@@ -21,6 +21,7 @@ packages/
   facilitator/  # @stellar-x402/facilitator - Gasless relayer service and nonce sequencer
   streaming/    # @stellar-x402/streaming - Server-Sent Events (SSE) paywall and token meter
   client/       # @stellar-x402/client - AI Agent payment client
+  python/       # stellar-x402 - Python ASGI & FastAPI paywall middleware
 proxy/          # Standalone Go reverse proxy (zero-dependency static binary)
 apps/
   web/          # Next.js 15 merchant portal
@@ -118,6 +119,29 @@ app.listen(3000);
 ```bash
 cd proxy
 go run cmd/gateway/main.go --config config.yaml
+```
+
+### 3. FastAPI (Python) Middleware
+```python
+from fastapi import FastAPI, Request
+from x402 import X402Middleware, RoutePricingPolicy
+
+app = FastAPI()
+
+app.add_middleware(
+    X402Middleware,
+    policy=RoutePricingPolicy(
+        path="/api/v1",
+        price="0.01",
+        asset="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+        recipient="GCALKSGAZRJLSUEJT3M5W6LN4R7XQOLIRCOS6ZA6EDZVTZDBIIPPFKJ6",
+        network="stellar:testnet",
+    )
+)
+
+@app.get("/api/v1/forecast")
+async def get_forecast(request: Request):
+    return {"city": "New York", "temperature": 68}
 ```
 
 ---
