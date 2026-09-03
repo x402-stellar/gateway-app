@@ -1,0 +1,27 @@
+name: Feature Request
+description: Propose a new SDK feature, framework middleware, or payment primitive
+labels: ["enhancement", "proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We appreciate feature suggestions that improve developer experience or expand protocol support.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem & Motivation
+      description: What use case or architectural limitation does this proposal address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_feature
+    attributes:
+      label: Proposed Solution / API Design
+      description: Describe your proposed interface, API signature, or workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches or existing workarounds?

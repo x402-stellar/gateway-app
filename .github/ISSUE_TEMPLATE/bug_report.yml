@@ -1,0 +1,63 @@
+name: Bug Report
+description: Report an issue or unexpected behavior in the SDKs, middleware, relayer, or proxy
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill in as much information as possible to help reproduce the issue.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the monorepo is experiencing the issue?
+      options:
+        - "@stellar-x402/core"
+        - "@stellar-x402/express"
+        - "@stellar-x402/fastify"
+        - "@stellar-x402/facilitator"
+        - "@stellar-x402/client"
+        - "proxy (Go reverse proxy)"
+        - "apps/web (Dashboard)"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Runtime & Environment
+      description: Node.js version, Go version, OS, or container environment.
+      placeholder: e.g. Node 22.13.0, Go 1.23, Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Provide minimal steps or code sample to reproduce the error.
+      placeholder: |
+        1. Setup Express middleware with options...
+        2. Send GET request without signature...
+        3. Receive unexpected header...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Error Output
+      description: Paste any terminal logs, stack traces, or HTTP responses.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and confirmed this is not a duplicate.
+          required: true
+        - label: I reproduced this behavior on the latest release or main branch.
+          required: true

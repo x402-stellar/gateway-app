@@ -1,0 +1,29 @@
+name: Integration Inquiry
+description: Questions or architectural guidance for integrating x402 into your stack
+labels: ["integration", "question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for questions about integrating the Stellar x402 gateway into your backend services, AI agents, or APIs.
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Target Architecture
+      description: Describe your existing stack (e.g. Next.js, Python FastAPI, Go Gin, LangChain, etc.)
+    validations:
+      required: true
+  - type: textarea
+    id: payment_needs
+    attributes:
+      label: Payment Requirements
+      description: Which assets (USDC, XLM) and payment flows (synchronous 402, gasless relayer, channel vouchers) do you plan to use?
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Specific Question or Blocker
+      description: What specific questions or implementation challenges are you facing?
+    validations:
+      required: true
