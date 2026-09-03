@@ -66,10 +66,10 @@ export const PaymentSignatureSchema = z
 export type PaymentSignature = z.infer<typeof PaymentSignatureSchema>;
 
 export interface RoutePricingPolicy {
-  path: string;
+  path?: string | undefined;
   price: string;
   asset: string;
   recipient: string;
-  network?: StellarNetworkId;
-  acceptedPaymentTypes?: StellarPaymentType[];
+  network?: StellarNetworkId | undefined;
+  acceptedPaymentTypes?: StellarPaymentType[] | undefined;
 }

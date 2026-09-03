@@ -1,0 +1,27 @@
+{
+  "name": "@stellar-x402/demo-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stellar-x402/core": "workspace:*",
+    "@stellar-x402/express": "workspace:*",
+    "@stellar-x402/facilitator": "workspace:*",
+    "@stellar-x402/streaming": "workspace:*",
+    "@stellar/stellar-sdk": "16.2.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@stellar-x402/client": "workspace:*",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.4"
+  }
+}
